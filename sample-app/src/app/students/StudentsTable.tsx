@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { apiJson } from "@/lib/apiClient";
 
 type Student = {
   id: number;
@@ -22,12 +23,10 @@ async function fetchStudents(
   pageSize: number,
   signal?: AbortSignal
 ): Promise<PaginatedStudents> {
-  const res = await fetch(`/api/students?page=${page}&pageSize=${pageSize}`, {
-    signal,
-    cache: "no-store",
-  });
-  if (!res.ok) throw new Error("Failed to fetch students");
-  return res.json();
+  return apiJson<PaginatedStudents>(
+    `/api/students?page=${page}&pageSize=${pageSize}`,
+    { cache: "no-store", signal }
+  );
 }
 
 export default function StudentsTable({
